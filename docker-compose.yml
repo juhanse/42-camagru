@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   web:
     build: .
@@ -30,6 +28,12 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
+
+  mailhog:
+    image: mailhog/mailhog
+    platform: linux/amd64
+    ports:
+      - "8025:8025"
 
 volumes:
   db_data:
