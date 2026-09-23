@@ -88,4 +88,53 @@ class AuthController extends Controller
 			$this->render('verify', ['title' => 'Vérification', 'message' => 'Lien invalide ou compte déjà vérifié.']);
 		}
 	}
+
+	public function login()
+	{
+		if (empty($_SESSION['csrf_token'])) {
+			$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+		}
+		$this->render('login', ['title' => 'Connexion - Camagru']);
+	}
+
+	public function loginPost()
+	{
+		if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+			die("Erreur CSRF");
+		}
+
+		$username = trim($_POST['username'] ?? '');
+		$password = $_POST['password'] ?? '';
+		$error = "";
+
+		$userModel = new User();
+		$user = $userModel->getUserByUsername($username);
+
+		if ($user && password_verify($password, $user['password'])) {
+			if ($user['is_verified']) {
+				$_SESSION['user_id'] = $user['id'];
+				$_SESSION['username'] = $user['username'];
+				header("Location: /");
+				exit;
+			} else {
+				$error = "Veuillez vérifier votre adresse email avant de vous connecter.";
+			}
+		} else {
+			$error = "Nom d'utilisateur ou mot de passe incorrect.";
+		}
+
+		$this->render('login', [
+			'title' => 'Connexion - Camagru',
+			'error' => $error,
+			'old_username' => htmlspecialchars($username)
+		]);
+	}
+
+	public function logout()
+	{
+		session_unset();
+		session_destroy();
+		header("Location: /");
+		exit;
+	}
 }
