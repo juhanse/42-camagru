@@ -75,4 +75,36 @@ class User
 		$stmt = $this->db->prepare("UPDATE users SET password = :password, token = NULL WHERE id = :id");
 		return $stmt->execute(['password' => $hash, 'id' => $userId]);
 	}
+
+	public function getUserById($id)
+	{
+		$stmt = $this->db->prepare("SELECT * FROM users WHERE id = :id");
+		$stmt->execute(['id' => $id]);
+		return $stmt->fetch();
+	}
+
+	public function checkOtherUserExists($username, $email, $userId)
+	{
+		$stmt = $this->db->prepare("SELECT id FROM users WHERE (username = :username OR email = :email) AND id != :id");
+		$stmt->execute(['username' => $username, 'email' => $email, 'id' => $userId]);
+		return $stmt->fetch();
+	}
+
+	public function updateProfile($id, $username, $email, $notify)
+	{
+		$stmt = $this->db->prepare("UPDATE users SET username = :username, email = :email, notify_comments = :notify WHERE id = :id");
+		return $stmt->execute([
+			'username' => $username,
+			'email' => $email,
+			'notify' => $notify,
+			'id' => $id
+		]);
+	}
+
+	public function updatePasswordOnly($id, $password)
+	{
+		$hash = password_hash($password, PASSWORD_BCRYPT);
+		$stmt = $this->db->prepare("UPDATE users SET password = :password WHERE id = :id");
+		return $stmt->execute(['password' => $hash, 'id' => $id]);
+	}
 }
