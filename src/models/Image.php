@@ -31,4 +31,35 @@ class Image
 		$stmt->execute(['id' => $id]);
 		return $stmt->fetch();
 	}
+
+	public function create($userId, $filePath)
+	{
+		$stmt = $this->db->prepare("INSERT INTO images (user_id, file_path) VALUES (:user_id, :file_path)");
+		$stmt->execute(['user_id' => $userId, 'file_path' => $filePath]);
+		return $this->db->lastInsertId();
+	}
+
+	public function getUserImages($userId)
+	{
+		$stmt = $this->db->prepare("SELECT * FROM images WHERE user_id = :user_id ORDER BY created_at DESC");
+		$stmt->execute(['user_id' => $userId]);
+		return $stmt->fetchAll();
+	}
+
+	public function deleteImage($imageId, $userId)
+	{
+		$stmt = $this->db->prepare("SELECT file_path FROM images WHERE id = :id AND user_id = :user_id");
+		$stmt->execute(['id' => $imageId, 'user_id' => $userId]);
+		$image = $stmt->fetch();
+
+		if ($image) {
+			$filePath = __DIR__ . '/..' . $image['file_path'];
+			if (file_exists($filePath)) {
+				unlink($filePath);
+			}
+			$delStmt = $this->db->prepare("DELETE FROM images WHERE id = :id AND user_id = :user_id");
+			return $delStmt->execute(['id' => $imageId, 'user_id' => $userId]);
+		}
+		return false;
+	}
 }
