@@ -4,7 +4,9 @@ session_start();
 require_once __DIR__ . '/core/Database.php';
 require_once __DIR__ . '/core/Controller.php';
 require_once __DIR__ . '/core/Router.php';
+require_once __DIR__ . '/controllers/HomeController.php';
 require_once __DIR__ . '/controllers/ProfileController.php';
+require_once __DIR__ . '/controllers/StudioController.php';
 
 $router = new Router();
 
@@ -27,5 +29,9 @@ $router->add('POST', '/reset', 'AuthController', 'resetPost');
 
 $router->add('GET', '/profile', 'ProfileController', 'index');
 $router->add('POST', '/profile', 'ProfileController', 'update');
+
+$router->add('GET', '/studio', 'StudioController', 'index');
+$router->add('POST', '/studio/save', 'StudioController', 'save');
+$router->add('POST', '/studio/delete', 'StudioController', 'delete');
 
 $router->dispatch($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
