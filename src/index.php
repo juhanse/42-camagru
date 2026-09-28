@@ -9,6 +9,8 @@ require_once __DIR__ . '/controllers/ProfileController.php';
 $router = new Router();
 
 $router->add('GET', '/', 'HomeController', 'index');
+$router->add('POST', '/like', 'HomeController', 'like');
+$router->add('POST', '/comment', 'HomeController', 'comment');
 
 $router->add('GET', '/register', 'AuthController', 'register');
 $router->add('POST', '/register', 'AuthController', 'registxerPost');
