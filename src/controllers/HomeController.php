@@ -85,8 +85,8 @@ class HomeController extends Controller
 			$imageModel = new Image();
 			$image = $imageModel->getImageById($imageId);
 
-			if ($image && $image['notify_comments'] && $image['user_id'] != $_SESSION['user_id']) {
-				$subject = "Camagru - Nouveau commentaire sur votre image";
+			if ($image && !empty($image['notify_comments']) && $image['user_id'] != $_SESSION['user_id']) {
+				$subject = "Camagru - Nouveau commentaire";
 				$message = "Bonjour " . $image['username'] . ",\r\n\r\nVotre image a recu un nouveau commentaire de " . $_SESSION['username'] . " :\r\n\"" . $content . "\"\r\n\r\nA bientot sur Camagru !";
 				$headers = "From: no-reply@camagru.com\r\n";
 				$headers .= "Reply-To: no-reply@camagru.com\r\n";
