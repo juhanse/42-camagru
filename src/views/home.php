@@ -37,27 +37,25 @@
 				</div>
 
 				<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-					<span style="font-weight: bold;"><?= $image['likes_count'] ?> J'aime</span>
+					<span id="likes-count-<?= $image['id'] ?>" style="font-weight: bold;"><?= $image['likes_count'] ?>
+						J'aime</span>
 
 					<?php if (isset($_SESSION['user_id'])): ?>
-						<form action="/like" method="POST" style="margin: 0;">
-							<input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-							<input type="hidden" name="image_id" value="<?= $image['id'] ?>">
-							<input type="hidden" name="page" value="<?= $page ?>">
-							<button type="submit"
-								style="padding: 5px 10px; background-color: <?= $image['user_liked'] ? 'var(--accent)' : 'var(--primary)' ?>; color: white; border: none; cursor: pointer; border-radius: 4px;">
-								<?= $image['user_liked'] ? 'Je n\'aime plus' : 'J\'aime' ?>
-							</button>
-						</form>
+						<button onclick="toggleLike(<?= $image['id'] ?>)" id="btn-like-<?= $image['id'] ?>"
+							style="padding: 5px 10px; background-color: <?= $image['user_liked'] ? 'var(--accent)' : 'var(--primary)' ?>; color: white; border: none; cursor: pointer; border-radius: 4px;">
+							<?= $image['user_liked'] ? 'Je n\'aime plus' : 'J\'aime' ?>
+						</button>
 					<?php endif; ?>
 				</div>
 
 				<div style="background-color: var(--bg); padding: 10px; border-radius: 4px;">
 					<h4 style="margin-bottom: 10px;">Commentaires</h4>
-					<?php if (empty($image['comments'])): ?>
-						<p style="font-size: 0.9em; color: gray;">Aucun commentaire.</p>
-					<?php else: ?>
-						<ul style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+
+					<ul id="comments-list-<?= $image['id'] ?>"
+						style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+						<?php if (empty($image['comments'])): ?>
+							<li id="no-comment-<?= $image['id'] ?>" style="font-size: 0.9em; color: gray;">Aucun commentaire.</li>
+						<?php else: ?>
 							<?php foreach ($image['comments'] as $comment): ?>
 								<li
 									style="font-size: 0.9em; border-bottom: 1px solid #ddd; padding-bottom: 5px; word-break: break-word;">
@@ -65,20 +63,18 @@
 									<?= htmlspecialchars($comment['content']) ?>
 								</li>
 							<?php endforeach; ?>
-						</ul>
-					<?php endif; ?>
+						<?php endif; ?>
+					</ul>
 
 					<?php if (isset($_SESSION['user_id'])): ?>
-						<form action="/comment" method="POST" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-							<input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-							<input type="hidden" name="image_id" value="<?= $image['id'] ?>">
-							<input type="hidden" name="page" value="<?= $page ?>">
-							<input type="text" name="content" required maxlength="255"
+						<div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+							<input type="text" id="comment-input-<?= $image['id'] ?>" required maxlength="255"
 								placeholder="Votre commentaire (max 255 caractères)..."
-								style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid var(--secondary); border-radius: 4px;">
-							<button type="submit"
+								style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid var(--secondary); border-radius: 4px;"
+								onkeypress="handleCommentEnter(event, <?= $image['id'] ?>)">
+							<button onclick="submitComment(<?= $image['id'] ?>)"
 								style="padding: 8px 15px; background-color: var(--primary); color: white; border: none; cursor: pointer; border-radius: 4px;">Envoyer</button>
-						</form>
+						</div>
 					<?php else: ?>
 						<p style="font-size: 0.8em; margin-top: 10px; color: var(--primary);">Connectez-vous pour aimer ou
 							commenter.</p>
@@ -97,3 +93,66 @@
 		<?php endfor; ?>
 	</div>
 <?php endif; ?>
+
+<script>
+	const csrfToken = "<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>";
+
+	function toggleLike(imageId) {
+		fetch('/like', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ image_id: imageId, csrf_token: csrfToken })
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.success) {
+					document.getElementById(`likes-count-${imageId}`).innerText = `${data.likes_count} J'aime`;
+					const btn = document.getElementById(`btn-like-${imageId}`);
+					if (data.user_liked) {
+						btn.innerText = "Je n'aime plus";
+						btn.style.backgroundColor = "var(--accent)";
+					} else {
+						btn.innerText = "J'aime";
+						btn.style.backgroundColor = "var(--primary)";
+					}
+				}
+			});
+	}
+
+	function submitComment(imageId) {
+		const input = document.getElementById(`comment-input-${imageId}`);
+		const content = input.value.trim();
+
+		if (!content) return;
+
+		fetch('/comment', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ image_id: imageId, content: content, csrf_token: csrfToken })
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.success) {
+					const list = document.getElementById(`comments-list-${imageId}`);
+					const noComment = document.getElementById(`no-comment-${imageId}`);
+					if (noComment) noComment.remove();
+
+					const li = document.createElement('li');
+					li.style.fontSize = '0.9em';
+					li.style.borderBottom = '1px solid #ddd';
+					li.style.paddingBottom = '5px';
+					li.style.wordBreak = 'break-word';
+					li.innerHTML = `<strong>${data.username}:</strong> ${data.content}`;
+
+					list.appendChild(li);
+					input.value = '';
+				}
+			});
+	}
+
+	function handleCommentEnter(event, imageId) {
+		if (event.key === 'Enter') {
+			submitComment(imageId);
+		}
+	}
+</script>

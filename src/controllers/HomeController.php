@@ -48,35 +48,53 @@ class HomeController extends Controller
 	public function like()
 	{
 		if (empty($_SESSION['user_id'])) {
-			header("Location: /login");
+			echo json_encode(['error' => 'Non autorisé']);
 			exit;
 		}
-		if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-			die("Erreur CSRF");
+
+		$data = json_decode(file_get_contents('php://input'), true);
+
+		if (!isset($data['csrf_token']) || $data['csrf_token'] !== $_SESSION['csrf_token']) {
+			echo json_encode(['error' => 'Erreur CSRF']);
+			exit;
 		}
 
-		$imageId = $_POST['image_id'] ?? null;
+		$imageId = $data['image_id'] ?? null;
 		if ($imageId) {
 			$likeModel = new Like();
 			$likeModel->toggleLike($_SESSION['user_id'], $imageId);
+
+			$newCount = $likeModel->getLikesCount($imageId);
+			$userLiked = $likeModel->hasLiked($_SESSION['user_id'], $imageId);
+
+			echo json_encode([
+				'success' => true,
+				'likes_count' => $newCount,
+				'user_liked' => $userLiked
+			]);
+			exit;
 		}
 
-		header("Location: /" . (isset($_POST['page']) ? "?page=" . (int) $_POST['page'] : ""));
+		echo json_encode(['error' => 'Requête invalide']);
 		exit;
 	}
 
 	public function comment()
 	{
 		if (empty($_SESSION['user_id'])) {
-			header("Location: /login");
+			echo json_encode(['error' => 'Non autorisé']);
 			exit;
 		}
-		if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-			die("Erreur CSRF");
+
+		$data = json_decode(file_get_contents('php://input'), true);
+
+		if (!isset($data['csrf_token']) || $data['csrf_token'] !== $_SESSION['csrf_token']) {
+			echo json_encode(['error' => 'Erreur CSRF']);
+			exit;
 		}
 
-		$imageId = $_POST['image_id'] ?? null;
-		$content = trim($_POST['content'] ?? '');
+		$imageId = $data['image_id'] ?? null;
+		$content = trim($data['content'] ?? '');
 
 		if (mb_strlen($content) > 255) {
 			$content = mb_substr($content, 0, 255);
@@ -98,9 +116,16 @@ class HomeController extends Controller
 
 				mail($image['email'], $subject, $message, $headers);
 			}
+
+			echo json_encode([
+				'success' => true,
+				'username' => $_SESSION['username'],
+				'content' => htmlspecialchars($content)
+			]);
+			exit;
 		}
 
-		header("Location: /" . (isset($_POST['page']) ? "?page=" . (int) $_POST['page'] : ""));
+		echo json_encode(['error' => 'Requête invalide']);
 		exit;
 	}
 }
