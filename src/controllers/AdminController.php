@@ -62,7 +62,18 @@ class AdminController extends Controller
 		$imageId = $_POST['image_id'] ?? null;
 		if ($imageId) {
 			$imageModel = new Image();
-			$imageModel->deleteImageAsAdmin($imageId);
+			$image = $imageModel->getImageById($imageId);
+
+			if ($image && $imageModel->deleteImageAsAdmin($imageId)) {
+				$adminName = $_SESSION['username'] ?? 'un administrateur';
+				$subject = "Camagru - Suppression de publication";
+				$message = "Bonjour " . $image['username'] . ",\r\n\r\nVotre publication du " . $image['created_at'] . " a ete supprimee par " . $adminName . " suite a un signalement.\r\n\r\nL'equipe Camagru";
+				$headers = "From: no-reply@camagru.com\r\n";
+				$headers .= "Reply-To: no-reply@camagru.com\r\n";
+				$headers .= "X-Mailer: PHP/" . phpversion();
+
+				mail($image['email'], $subject, $message, $headers);
+			}
 		}
 
 		header("Location: /admin");
