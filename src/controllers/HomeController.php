@@ -128,4 +128,30 @@ class HomeController extends Controller
 		echo json_encode(['error' => 'Requête invalide']);
 		exit;
 	}
+
+	public function report()
+	{
+		if (empty($_SESSION['user_id'])) {
+			echo json_encode(['error' => 'Non autorisé']);
+			exit;
+		}
+
+		$data = json_decode(file_get_contents('php://input'), true);
+
+		if (!isset($data['csrf_token']) || $data['csrf_token'] !== $_SESSION['csrf_token']) {
+			echo json_encode(['error' => 'Erreur CSRF']);
+			exit;
+		}
+
+		$imageId = $data['image_id'] ?? null;
+		if ($imageId) {
+			$reportModel = new Report();
+			$reportModel->addReport($_SESSION['user_id'], $imageId);
+			echo json_encode(['success' => true]);
+			exit;
+		}
+
+		echo json_encode(['error' => 'Requête invalide']);
+		exit;
+	}
 }

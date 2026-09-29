@@ -16,7 +16,8 @@
 				style="border: 1px solid var(--secondary); padding: 15px; border-radius: 8px; background: white; max-width: 640px; margin: 0 auto; width: 100%;">
 				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
 					<p style="font-weight: bold; margin: 0;">Posté par <?= htmlspecialchars($image['username']) ?> le
-						<?= htmlspecialchars($image['created_at']) ?></p>
+						<?= htmlspecialchars($image['created_at']) ?>
+					</p>
 
 					<div style="display: flex; gap: 10px;">
 						<a href="https://twitter.com/intent/tweet?url=<?= $encodedUrl ?>&text=<?= $encodedText ?>"
@@ -36,14 +37,24 @@
 						style="width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px;">
 				</div>
 
-				<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
-					<span id="likes-count-<?= $image['id'] ?>" style="font-weight: bold;"><?= $image['likes_count'] ?>
-						J'aime</span>
+				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+					<div style="display: flex; align-items: center; gap: 15px;">
+						<span id="likes-count-<?= $image['id'] ?>" style="font-weight: bold;"><?= $image['likes_count'] ?>
+							J'aime</span>
+
+						<?php if (isset($_SESSION['user_id'])): ?>
+							<button onclick="toggleLike(<?= $image['id'] ?>)" id="btn-like-<?= $image['id'] ?>"
+								style="padding: 5px 10px; background-color: <?= $image['user_liked'] ? 'var(--accent)' : 'var(--primary)' ?>; color: white; border: none; cursor: pointer; border-radius: 4px;">
+								<?= $image['user_liked'] ? 'Je n\'aime plus' : 'J\'aime' ?>
+							</button>
+						<?php endif; ?>
+					</div>
 
 					<?php if (isset($_SESSION['user_id'])): ?>
-						<button onclick="toggleLike(<?= $image['id'] ?>)" id="btn-like-<?= $image['id'] ?>"
-							style="padding: 5px 10px; background-color: <?= $image['user_liked'] ? 'var(--accent)' : 'var(--primary)' ?>; color: white; border: none; cursor: pointer; border-radius: 4px;">
-							<?= $image['user_liked'] ? 'Je n\'aime plus' : 'J\'aime' ?>
+						<button onclick="reportPost(<?= $image['id'] ?>)"
+							style="padding: 5px 10px; background-color: var(--accent); color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 0.8em; font-weight: bold;"
+							title="Signaler cette publication">
+							Signaler
 						</button>
 					<?php endif; ?>
 				</div>
@@ -154,5 +165,23 @@
 		if (event.key === 'Enter') {
 			submitComment(imageId);
 		}
+	}
+
+	function reportPost(imageId) {
+		if (!confirm("Voulez-vous vraiment signaler cette publication ?")) return;
+
+		fetch('/report', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ image_id: imageId, csrf_token: csrfToken })
+		})
+			.then(res => res.json())
+			.then(data => {
+				if (data.success) {
+					alert("La publication a été signalée aux administrateurs.");
+				} else {
+					alert(data.error || "Une erreur est survenue.");
+				}
+			});
 	}
 </script>
