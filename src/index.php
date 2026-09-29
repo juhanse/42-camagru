@@ -15,7 +15,7 @@ $router->add('POST', '/like', 'HomeController', 'like');
 $router->add('POST', '/comment', 'HomeController', 'comment');
 
 $router->add('GET', '/register', 'AuthController', 'register');
-$router->add('POST', '/register', 'AuthController', 'registxerPost');
+$router->add('POST', '/register', 'AuthController', 'registerPost');
 $router->add('GET', '/verify', 'AuthController', 'verify');
 
 $router->add('GET', '/login', 'AuthController', 'login');
