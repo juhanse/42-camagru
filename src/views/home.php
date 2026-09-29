@@ -5,13 +5,14 @@
 		<p>Aucune image pour le moment.</p>
 	<?php else: ?>
 		<?php foreach ($gallery as $image): ?>
-			<div style="border: 1px solid var(--secondary); padding: 15px; border-radius: 8px; background: white;">
+			<div
+				style="border: 1px solid var(--secondary); padding: 15px; border-radius: 8px; background: white; max-width: 640px; margin: 0 auto; width: 100%;">
 				<p style="font-weight: bold; margin-bottom: 10px;">Posté par <?= htmlspecialchars($image['username']) ?> le
 					<?= htmlspecialchars($image['created_at']) ?></p>
 
 				<div style="text-align: center; margin-bottom: 15px;">
 					<img src="<?= htmlspecialchars($image['file_path']) ?>" alt="Image Camagru"
-						style="max-width: 100%; border-radius: 4px;">
+						style="width: 100%; height: auto; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px;">
 				</div>
 
 				<div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
@@ -51,7 +52,8 @@
 							<input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
 							<input type="hidden" name="image_id" value="<?= $image['id'] ?>">
 							<input type="hidden" name="page" value="<?= $page ?>">
-							<input type="text" name="content" required placeholder="Votre commentaire..."
+							<input type="text" name="content" required maxlength="255"
+								placeholder="Votre commentaire (max 255 caractères)..."
 								style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid var(--secondary); border-radius: 4px;">
 							<button type="submit"
 								style="padding: 8px 15px; background-color: var(--primary); color: white; border: none; cursor: pointer; border-radius: 4px;">Envoyer</button>

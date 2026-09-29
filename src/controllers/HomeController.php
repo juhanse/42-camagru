@@ -78,6 +78,10 @@ class HomeController extends Controller
 		$imageId = $_POST['image_id'] ?? null;
 		$content = trim($_POST['content'] ?? '');
 
+		if (mb_strlen($content) > 255) {
+			$content = mb_substr($content, 0, 255);
+		}
+
 		if ($imageId && !empty($content)) {
 			$commentModel = new Comment();
 			$commentModel->addComment($_SESSION['user_id'], $imageId, $content);
