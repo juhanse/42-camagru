@@ -3,6 +3,7 @@ require_once __DIR__ . '/../core/Controller.php';
 require_once __DIR__ . '/../models/Image.php';
 require_once __DIR__ . '/../models/Like.php';
 require_once __DIR__ . '/../models/Comment.php';
+require_once __DIR__ . '/../models/Report.php';
 
 class HomeController extends Controller
 {
@@ -15,6 +16,7 @@ class HomeController extends Controller
 		$imageModel = new Image();
 		$likeModel = new Like();
 		$commentModel = new Comment();
+		$reportModel = new Report();
 
 		$limit = 5;
 		$page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
@@ -33,6 +35,7 @@ class HomeController extends Controller
 		foreach ($images as $img) {
 			$img['likes_count'] = $likeModel->getLikesCount($img['id']);
 			$img['user_liked'] = $userId ? $likeModel->hasLiked($userId, $img['id']) : false;
+			$img['user_reported'] = $userId ? $reportModel->hasReported($userId, $img['id']) : false;
 			$img['comments'] = $commentModel->getCommentsForImage($img['id']);
 			$gallery[] = $img;
 		}
@@ -146,8 +149,11 @@ class HomeController extends Controller
 		$imageId = $data['image_id'] ?? null;
 		if ($imageId) {
 			$reportModel = new Report();
-			$reportModel->addReport($_SESSION['user_id'], $imageId);
-			echo json_encode(['success' => true]);
+			if ($reportModel->addReport($_SESSION['user_id'], $imageId)) {
+				echo json_encode(['success' => true]);
+			} else {
+				echo json_encode(['error' => 'Vous avez déjà signalé cette publication.']);
+			}
 			exit;
 		}
 

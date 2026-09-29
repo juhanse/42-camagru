@@ -33,4 +33,11 @@ class Report
 		$stmt = $this->db->prepare("DELETE FROM reports WHERE image_id = :image_id");
 		return $stmt->execute(['image_id' => $imageId]);
 	}
+
+	public function hasReported($userId, $imageId)
+	{
+		$stmt = $this->db->prepare("SELECT id FROM reports WHERE user_id = :user_id AND image_id = :image_id");
+		$stmt->execute(['user_id' => $userId, 'image_id' => $imageId]);
+		return (bool) $stmt->fetch();
+	}
 }

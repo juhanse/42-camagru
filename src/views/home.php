@@ -51,11 +51,19 @@
 					</div>
 
 					<?php if (isset($_SESSION['user_id'])): ?>
-						<button onclick="reportPost(<?= $image['id'] ?>)"
-							style="padding: 5px 10px; background-color: var(--accent); color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 0.8em; font-weight: bold;"
-							title="Signaler cette publication">
-							Signaler
-						</button>
+						<?php if ($image['user_reported']): ?>
+							<button disabled
+								style="padding: 5px 10px; background-color: gray; color: white; border: none; border-radius: 4px; font-size: 0.8em; font-weight: bold; cursor: not-allowed;"
+								title="Vous avez déjà signalé cette publication">
+								Signalé
+							</button>
+						<?php else: ?>
+							<button onclick="reportPost(<?= $image['id'] ?>)" id="btn-report-<?= $image['id'] ?>"
+								style="padding: 5px 10px; background-color: var(--accent); color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 0.8em; font-weight: bold;"
+								title="Signaler cette publication">
+								Signaler
+							</button>
+						<?php endif; ?>
 					<?php endif; ?>
 				</div>
 
@@ -179,6 +187,13 @@
 			.then(data => {
 				if (data.success) {
 					alert("La publication a été signalée aux administrateurs.");
+					const btn = document.getElementById(`btn-report-${imageId}`);
+					if (btn) {
+						btn.innerText = "Signalé";
+						btn.style.backgroundColor = "gray";
+						btn.style.cursor = "not-allowed";
+						btn.disabled = true;
+					}
 				} else {
 					alert(data.error || "Une erreur est survenue.");
 				}
