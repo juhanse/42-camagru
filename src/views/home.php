@@ -5,10 +5,31 @@
 		<p>Aucune image pour le moment.</p>
 	<?php else: ?>
 		<?php foreach ($gallery as $image): ?>
+			<?php
+			$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
+			$fullUrl = $protocol . $_SERVER['HTTP_HOST'] . $image['file_path'];
+			$encodedUrl = urlencode($fullUrl);
+			$encodedText = urlencode("Découvrez cette création sur Camagru !");
+			?>
+
 			<div
 				style="border: 1px solid var(--secondary); padding: 15px; border-radius: 8px; background: white; max-width: 640px; margin: 0 auto; width: 100%;">
-				<p style="font-weight: bold; margin-bottom: 10px;">Posté par <?= htmlspecialchars($image['username']) ?> le
-					<?= htmlspecialchars($image['created_at']) ?></p>
+				<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+					<p style="font-weight: bold; margin: 0;">Posté par <?= htmlspecialchars($image['username']) ?> le
+						<?= htmlspecialchars($image['created_at']) ?></p>
+
+					<div style="display: flex; gap: 10px;">
+						<a href="https://twitter.com/intent/tweet?url=<?= $encodedUrl ?>&text=<?= $encodedText ?>"
+							target="_blank"
+							style="padding: 5px 10px; background-color: #1DA1F2; color: white; text-decoration: none; border-radius: 4px; font-size: 0.8em; font-weight: bold;">
+							Twitter
+						</a>
+						<a href="https://www.facebook.com/sharer/sharer.php?u=<?= $encodedUrl ?>" target="_blank"
+							style="padding: 5px 10px; background-color: #1877F2; color: white; text-decoration: none; border-radius: 4px; font-size: 0.8em; font-weight: bold;">
+							Facebook
+						</a>
+					</div>
+				</div>
 
 				<div style="text-align: center; margin-bottom: 15px;">
 					<img src="<?= htmlspecialchars($image['file_path']) ?>" alt="Image Camagru"
