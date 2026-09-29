@@ -72,20 +72,43 @@ class StudioController extends Controller
 			return;
 		}
 
-		$filterPath = __DIR__ . '/..' . parse_url($filterUrl, PHP_URL_PATH);
-		if (!file_exists($filterPath)) {
-			echo json_encode(['error' => 'Filtre introuvable']);
-			return;
-		}
+		$targetW = 640;
+		$targetH = 480;
+		$finalImg = imagecreatetruecolor($targetW, $targetH);
 
-		$filterImg = imagecreatefrompng($filterPath);
+		imagealphablending($finalImg, true);
+		imagesavealpha($finalImg, true);
+		$bgColor = imagecolorallocatealpha($finalImg, 255, 255, 255, 127);
+		imagefill($finalImg, 0, 0, $bgColor);
 
 		$srcW = imagesx($sourceImg);
 		$srcH = imagesy($sourceImg);
-		$filtW = imagesx($filterImg);
-		$filtH = imagesy($filterImg);
+		$srcRatio = $srcW / $srcH;
+		$targetRatio = $targetW / $targetH;
 
-		imagecopyresampled($sourceImg, $filterImg, 0, 0, 0, 0, $srcW, $srcH, $filtW, $filtH);
+		if ($srcRatio > $targetRatio) {
+			$cropW = (int) ($srcH * $targetRatio);
+			$cropH = $srcH;
+			$cropX = (int) (($srcW - $cropW) / 2);
+			$cropY = 0;
+		} else {
+			$cropW = $srcW;
+			$cropH = (int) ($srcW / $targetRatio);
+			$cropX = 0;
+			$cropY = (int) (($srcH - $cropH) / 2);
+		}
+
+		imagecopyresampled($finalImg, $sourceImg, 0, 0, $cropX, $cropY, $targetW, $targetH, $cropW, $cropH);
+
+		$filterPath = __DIR__ . '/..' . parse_url($filterUrl, PHP_URL_PATH);
+		if (file_exists($filterPath)) {
+			$filterImg = imagecreatefrompng($filterPath);
+			if ($filterImg) {
+				$filtW = imagesx($filterImg);
+				$filtH = imagesy($filterImg);
+				imagecopyresampled($finalImg, $filterImg, 0, 0, 0, 0, $targetW, $targetH, $filtW, $filtH);
+			}
+		}
 
 		$uploadDir = __DIR__ . '/../public/uploads';
 		if (!is_dir($uploadDir)) {
@@ -96,7 +119,7 @@ class StudioController extends Controller
 		$uploadPath = "{$uploadDir}/{$fileName}";
 		$publicPath = "/public/uploads/{$fileName}";
 
-		imagepng($sourceImg, $uploadPath);
+		imagepng($finalImg, $uploadPath);
 
 		$imageModel = new Image();
 		$imageId = $imageModel->create($_SESSION['user_id'], $publicPath);
