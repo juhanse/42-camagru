@@ -62,4 +62,21 @@ class Image
 		}
 		return false;
 	}
+
+	public function deleteImageAsAdmin($imageId)
+	{
+		$stmt = $this->db->prepare("SELECT file_path FROM images WHERE id = :id");
+		$stmt->execute(['id' => $imageId]);
+		$image = $stmt->fetch();
+
+		if ($image) {
+			$filePath = __DIR__ . '/..' . $image['file_path'];
+			if (file_exists($filePath)) {
+				unlink($filePath);
+			}
+			$delStmt = $this->db->prepare("DELETE FROM images WHERE id = :id");
+			return $delStmt->execute(['id' => $imageId]);
+		}
+		return false;
+	}
 }

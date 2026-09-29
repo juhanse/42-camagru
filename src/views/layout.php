@@ -14,8 +14,16 @@
 		<nav>
 			<a href="/">Galerie</a>
 			<?php if (isset($_SESSION['user_id'])): ?>
+				<?php
+				require_once __DIR__ . '/../models/User.php';
+				$layoutUserModel = new User();
+				$layoutUser = $layoutUserModel->getUserById($_SESSION['user_id']);
+				?>
 				<a href="/studio">Studio</a>
 				<a href="/profile">Profil</a>
+				<?php if ($layoutUser && !empty($layoutUser['is_admin'])): ?>
+					<a href="/admin" style="color: var(--accent);">Admin</a>
+				<?php endif; ?>
 				<a href="/logout">Déconnexion</a>
 			<?php else: ?>
 				<a href="/login">Connexion</a>
