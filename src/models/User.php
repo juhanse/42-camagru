@@ -107,4 +107,10 @@ class User
 		$stmt = $this->db->prepare("UPDATE users SET password = :password WHERE id = :id");
 		return $stmt->execute(['password' => $hash, 'id' => $id]);
 	}
+
+	public function getAllUsersWithImageCount()
+	{
+		$stmt = $this->db->query("SELECT u.id, u.username, u.email, COUNT(i.id) as image_count FROM users u LEFT JOIN images i ON u.id = i.user_id GROUP BY u.id ORDER BY u.created_at DESC");
+		return $stmt->fetchAll();
+	}
 }

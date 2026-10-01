@@ -31,9 +31,13 @@ class AdminController extends Controller
 		$reportModel = new Report();
 		$reportedImages = $reportModel->getReportedImages();
 
+		$userModel = new User();
+		$usersList = $userModel->getAllUsersWithImageCount();
+
 		$this->render('admin', [
 			'title' => 'Administration - Camagru',
-			'reportedImages' => $reportedImages
+			'reportedImages' => $reportedImages,
+			'usersList' => $usersList
 		]);
 	}
 
