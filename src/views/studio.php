@@ -80,22 +80,25 @@
 		<h3>Calques</h3>
 		<p style="font-size: 0.9em; color: gray; margin-bottom: 15px;">Sélectionnez un calque pour activer la capture.
 		</p>
-		<div id="filtersContainer"
-			style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 500px;">
-			<?php if (!empty($filters)): ?>
-				<?php foreach ($filters as $filter): ?>
-					<div class="filter-option" data-src="<?= htmlspecialchars($filter) ?>"
-						style="border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: 0.2s; background-color: #f1f1f1; padding: 5px; text-align: center;">
-						<img src="<?= htmlspecialchars($filter) ?>"
-							style="max-width: 100%; max-height: 100px; object-fit: contain;" alt="Filtre">
-						<p style="font-size: 0.8em; margin-top: 5px; word-break: break-all;">
-							<?= htmlspecialchars(basename($filter)) ?>
-						</p>
-					</div>
-				<?php endforeach; ?>
-			<?php else: ?>
-				<p>Aucun filtre trouvé dans le dossier public/filters.</p>
-			<?php endif; ?>
+
+		<div style="flex: 1; position: relative; min-height: 200px;">
+			<div id="filtersContainer"
+				style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px;">
+				<?php if (!empty($filters)): ?>
+					<?php foreach ($filters as $filter): ?>
+						<div class="filter-option" data-src="<?= htmlspecialchars($filter) ?>"
+							style="border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: 0.2s; background-color: #f1f1f1; padding: 5px; text-align: center;">
+							<img src="<?= htmlspecialchars($filter) ?>"
+								style="max-width: 100%; max-height: 100px; object-fit: contain;" alt="Filtre">
+							<p style="font-size: 0.8em; margin-top: 5px; word-break: break-all;">
+								<?= htmlspecialchars(basename($filter)) ?>
+							</p>
+						</div>
+					<?php endforeach; ?>
+				<?php else: ?>
+					<p>Aucun filtre trouvé dans le dossier public/filters.</p>
+				<?php endif; ?>
+			</div>
 		</div>
 	</div>
 </div>
