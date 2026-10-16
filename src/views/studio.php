@@ -260,28 +260,50 @@
 				csrf_token: csrfToken
 			})
 		})
-			.then(response => response.json())
-			.then(data => {
-				statusMessage.style.display = 'block';
-				if (data.success) {
-					statusMessage.style.backgroundColor = '#d4edda';
-					statusMessage.style.color = '#155724';
-					statusMessage.innerText = 'Image sauvegardée avec succès ! (Rechargement...)';
-					setTimeout(() => window.location.reload(), 1000);
-				} else {
-					statusMessage.style.backgroundColor = '#f8d7da';
-					statusMessage.style.color = '#721c24';
-					statusMessage.innerText = data.error || 'Erreur lors de la sauvegarde.';
-					updateCaptureButtonState();
-				}
-			})
-			.catch(() => {
-				statusMessage.style.display = 'block';
+		.then(async response => {
+			const body = await response.text();
+			let data;
+
+			try {
+				data = JSON.parse(body);
+			} catch (error) {
+				throw new Error(
+					`Réponse PHP invalide (HTTP ${response.status}) : ${body}`
+				);
+			}
+
+			if (!response.ok) {
+				throw new Error(
+					`Erreur HTTP ${response.status} : ${body}`
+				);
+			}
+
+			statusMessage.style.display = 'block';
+
+			if (data.success) {
+				statusMessage.style.backgroundColor = '#d4edda';
+				statusMessage.style.color = '#155724';
+				statusMessage.innerText = 'Image sauvegardée avec succès !';
+
+				setTimeout(() => window.location.reload(), 1000);
+			} else {
 				statusMessage.style.backgroundColor = '#f8d7da';
 				statusMessage.style.color = '#721c24';
-				statusMessage.innerText = 'Erreur réseau.';
+				statusMessage.innerText = data.error || 'Erreur de sauvegarde.';
+
 				updateCaptureButtonState();
-			});
+			}
+		})
+		.catch(error => {
+			console.error('Erreur lors de la sauvegarde :', error);
+
+			statusMessage.style.display = 'block';
+			statusMessage.style.backgroundColor = '#f8d7da';
+			statusMessage.style.color = '#721c24';
+			statusMessage.innerText = error.message;
+
+			updateCaptureButtonState();
+		});
 	});
 
 	creationThumbnails.forEach(thumb => {
