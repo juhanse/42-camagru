@@ -22,7 +22,7 @@
 				<a href="/studio">Studio</a>
 				<a href="/profile">Profil</a>
 				<?php if ($layoutUser && !empty($layoutUser['is_admin'])): ?>
-					<a href="/admin" style="color: var(--accent);">Admin</a>
+					<a href="/admin">Admin</a>
 				<?php endif; ?>
 				<a href="/logout">Déconnexion</a>
 			<?php else: ?>
