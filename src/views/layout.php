@@ -15,15 +15,15 @@
 			<a href="/">Galerie</a>
 			<?php if (isset($_SESSION['user_id'])): ?>
 				<?php
-				require_once __DIR__ . '/../models/User.php';
-				$layoutUserModel = new User();
-				$layoutUser = $layoutUserModel->getUserById($_SESSION['user_id']);
+					require_once __DIR__ . '/../models/User.php';
+					$layoutUserModel = new User();
+					$layoutUser = $layoutUserModel->getUserById($_SESSION['user_id']);
 				?>
-				<a href="/studio">Studio</a>
-				<a href="/profile">Profil</a>
+					<a href="/studio">Studio</a>
 				<?php if ($layoutUser && !empty($layoutUser['is_admin'])): ?>
 					<a href="/admin">Admin</a>
 				<?php endif; ?>
+				<a href="/profile">Profil</a>
 				<a href="/logout">Déconnexion</a>
 			<?php else: ?>
 				<a href="/login">Connexion</a>
@@ -37,7 +37,7 @@
 	</main>
 
 	<footer>
-		<p>&copy; 2026 Camagru - juhanse</p>
+		<p>&copy; 2026 Camagru - <a href="https://github.com/juhanse" target="_blank" rel="noopener noreferrer" style="color: white;">juhanse</a></p>
 	</footer>
 </body>
 
