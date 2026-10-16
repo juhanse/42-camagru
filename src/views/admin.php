@@ -3,16 +3,16 @@
 <div style="display: flex; flex-wrap: wrap; gap: 30px; margin-top: 20px;">
 
 	<div style="flex: 1; min-width: 300px;">
-		<h3 style="border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px;">Signalements</h3>
+		<h3 style="border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px;">Signalements</h3>
 		<div style="display: flex; flex-direction: column; gap: 30px;">
 			<?php if (empty($reportedImages)): ?>
 				<p>Aucun signalement en attente.</p>
 			<?php else: ?>
 				<?php foreach ($reportedImages as $image): ?>
 					<div
-						style="border: 1px solid var(--accent); padding: 15px; border-radius: 8px; background: white; width: 100%;">
+						style="border: 1px solid var(--primary); padding: 15px; border-radius: 8px; background: white; width: 100%;">
 						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-							<p style="font-weight: bold; margin: 0; color: var(--accent);">Signalements :
+							<p style="font-weight: bold; margin: 0; color: var(--primary);">Signalements :
 								<?= htmlspecialchars($image['report_count']) ?>
 							</p>
 							<p style="font-size: 0.9em; margin: 0;">Posté par <?= htmlspecialchars($image['username']) ?></p>
@@ -58,7 +58,7 @@
 					<tr style="background-color: var(--bg); border-bottom: 1px solid var(--secondary);">
 						<th style="padding: 12px 15px;">Utilisateur</th>
 						<th style="padding: 12px 15px;">Email</th>
-						<th style="padding: 12px 15px; text-align: center;">Images</th>
+						<th style="padding: 12px 15px; text-align: center;">Publications</th>
 					</tr>
 				</thead>
 				<tbody>
