@@ -119,7 +119,37 @@ class StudioController extends Controller
 		$uploadPath = "{$uploadDir}/{$fileName}";
 		$publicPath = "/public/uploads/{$fileName}";
 
-		imagepng($finalImg, $uploadPath);
+		if (!is_dir($uploadDir)) {
+			echo json_encode([
+				'error' => 'Dossier uploads inexistant',
+				'path' => $uploadDir
+			]);
+			return;
+		}
+
+		if (!is_writable($uploadDir)) {
+			echo json_encode([
+				'error' => 'Dossier uploads non accessible en écriture',
+				'path' => $uploadDir
+			]);
+			return;
+		}
+
+		if (!imagepng($finalImg, $uploadPath)) {
+			echo json_encode([
+				'error' => 'Échec de imagepng()',
+				'path' => $uploadPath
+			]);
+			return;
+		}
+
+		if (!file_exists($uploadPath) || filesize($uploadPath) === 0) {
+			echo json_encode([
+				'error' => 'Le fichier PNG est absent ou vide',
+				'path' => $uploadPath
+			]);
+			return;
+		}
 
 		$imageModel = new Image();
 		$imageId = $imageModel->create($_SESSION['user_id'], $publicPath);
