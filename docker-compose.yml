@@ -6,7 +6,7 @@ services:
       - "8080:80"
     volumes:
       - ./src:/var/www/html
-      - ./config:/var/www/config
+      - ./setup.php:/var/www/setup.php:ro
     env_file:
     - .env
     environment:

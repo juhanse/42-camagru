@@ -1,6 +1,6 @@
 build:
 	docker-compose up -d --build
-	docker-compose exec web php ../config/setup.php
+	docker-compose exec web php /var/www/setup.php
 
 start:
 	docker-compose up -d
