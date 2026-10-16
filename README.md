@@ -2,12 +2,17 @@
   <h1>📸 Camagru</h1>
   <p><strong>A lightweight Instagram-like web application built from scratch in Vanilla PHP.</strong></p>
 
-  [![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)]()
-  [![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)]()
-  [![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)]()
-  [![Vanilla JS](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
+  <table>
+    <tr>
+      <td><img src="src/public/home_prev.png" alt="App Preview 1" width="400"></td>
+      <td><img src="src/public/studio_prev.png" alt="App Preview 2" width="400"></td>
+    </tr>
+    <tr>
+      <td><img src="src/public/admin_prev.png" alt="App Preview 3" width="400"></td>
+      <td><img src="src/public/mail_prev.png" alt="App Preview 4" width="400"></td>
+    </tr>
+  </table>
 </div>
-
 
 ## 🎯 What is Camagru?
 
@@ -22,29 +27,29 @@ This project demonstrates a deep understanding of core web technologies, applica
 
 Here is a quick overview of what the application can do:
 
-- **🔐 User Authentication System:**
-  - Secure registration and login.
-  - Email verification upon registration.
-  - "Forgot Password" functionality with email reset links.
+**🔐 User Authentication System:**
+- Secure registration and login.
+- Email verification upon registration.
+- "Forgot Password" functionality with email reset links.
   
-- **📷 The Studio (Montage):**
-  - Use the webcam to take a picture or upload a local image file.
-  - Superpose selectable stickers/filters onto the image.
-  - Real-time preview of the resulting photo.
-  - Delete past montages.
+**📷 The Studio (Montage):**
+- Use the webcam to take a picture or upload a local image file.
+- Superpose selectable stickers/filters onto the image.
+- Real-time preview of the resulting photo.
+- Delete past montages.
 
-- **🌍 Public Gallery:**
-  - View all user-created photos in a paginated gallery.
-  - Like and comment on pictures.
-  - Receive an email notification when someone comments on your photo.
+**🌍 Public Gallery:**
+- View all user-created photos in a paginated gallery.
+- Like and comment on pictures.
+- Receive an email notification when someone comments on your photo.
 
-- **👤 Profile Management:**
-  - Update username, email address, and password.
-  - Notification preferences.
+**👤 Profile Management:**
+- Update username, email address, and password.
+- Notification preferences.
 
-- **🛡️ Moderation (Admin):**
-  - Users can report inappropriate content.
-  - Admin panel to manage reported images.
+**🛡️ Moderation (Admin):**
+- Users can report inappropriate content.
+- Admin panel to manage reported images.
 
 
 ## 🏗️ Architecture & Stack
@@ -52,17 +57,17 @@ Here is a quick overview of what the application can do:
 To keep the application modular, scalable, and maintainable without a framework, I implemented a custom **Model-View-Controller (MVC)** architecture.
 
 ### Technical Stack
-* **Backend:** PHP (Vanilla)
-* **Frontend:** HTML5, CSS3, Vanilla JavaScript
-* **Database:** MariaDB / MySQL
-* **Infrastructure:** Docker & Docker Compose
-* **Email Testing:** Mailhog
+- **Backend:** PHP (Vanilla)
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript
+- **Database:** MariaDB / MySQL
+- **Infrastructure:** Docker & Docker Compose
+- **Email Testing:** Mailhog
 
 ### Core Concepts Handled
-* **Routing:** Custom HTTP router to map URLs to Controllers.
-* **Database Abstraction:** Custom PDO wrapper for secure database interactions.
-* **Templating:** Basic view rendering logic separating PHP backend logic from HTML presentation.
-* **Image Processing:** Manipulating and merging images using the PHP GD library.
+- **Routing:** Custom HTTP router to map URLs to Controllers.
+- **Database Abstraction:** Custom PDO wrapper for secure database interactions.
+- **Templating:** Basic view rendering logic separating PHP backend logic from HTML presentation.
+- **Image Processing:** Manipulating and merging images using the PHP GD library.
 
 
 ## 🔒 Security Measures
@@ -84,23 +89,32 @@ Make sure you have **Docker** and **Docker Compose** installed on your machine, 
 ### Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/juhanse/42-camagru.git
-   cd camagru
-   ```
+```bash
+git clone https://github.com/juhanse/42-camagru.git camagru
+cd camagru
+```
 
-2. **Build and start the containers**
-   Using the provided Makefile, you can launch the entire stack:
-   ```bash
-   make build
-   ```
-   *This command spins up the Web server, Database, and Mailhog containers, and automatically runs the database setup script.*
+2. **Configure Environment Variables**
+Copy the example environment file and rename it to `.env`:
+```bash
+cp .env.example .env
+```
 
-3. **Access the application**
-   - **App:** [http://localhost:8080](http://localhost:8080)
-   - **Mailhog (to view sent emails):** [http://localhost:8025](http://localhost:8025)
 
-4. **Useful Commands**
-   - `make start`: Start the existing containers.
-   - `make clean`: Stop the containers and wipe the database volumes.
-   - `make re`: Rebuild the whole environment from scratch.
+3. **Build and start the containers**
+Using the provided Makefile, you can launch the entire stack:
+```bash
+make build
+```
+
+
+*This command spins up the Web server, Database, and Mailhog containers, and automatically runs the database setup script.*
+4. **Access the application**
+* **App:** [http://localhost:8080](http://localhost:8080)
+* **Mailhog (to view sent emails):** [http://localhost:8025](http://localhost:8025)
+
+
+5. **Useful Commands**
+* `make start`: Start the existing containers.
+* `make clean`: Stop the containers and wipe the database volumes.
+* `make re`: Rebuild the whole environment from scratch.
