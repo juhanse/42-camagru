@@ -111,26 +111,12 @@ class StudioController extends Controller
 		}
 
 		$uploadDir = __DIR__ . '/../public/uploads';
-		if (!is_dir($uploadDir)) {
-			mkdir($uploadDir, 0777, true);
-		}
 
-		$fileName = uniqid() . '.png';
-		$uploadPath = "{$uploadDir}/{$fileName}";
-		$publicPath = "/public/uploads/{$fileName}";
+		if (!is_dir($uploadDir) || !is_writable($uploadDir)) {
+			error_log("Dossier uploads absent ou non accessible : " . $uploadDir);
 
-		if (!is_dir($uploadDir)) {
 			echo json_encode([
-				'error' => 'Dossier uploads inexistant',
-				'path' => $uploadDir
-			]);
-			return;
-		}
-
-		if (!is_writable($uploadDir)) {
-			echo json_encode([
-				'error' => 'Dossier uploads non accessible en écriture',
-				'path' => $uploadDir
+				'error' => 'Le dossier uploads est indisponible'
 			]);
 			return;
 		}
