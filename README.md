@@ -32,7 +32,7 @@ Here is a quick overview of what the application can do:
 - Email verification upon registration.
 - "Forgot Password" functionality with email reset links.
   
-**📷 The Studio (Montage):**
+**📷 The Studio:**
 - Use the webcam to take a picture or upload a local image file.
 - Superpose selectable stickers/filters onto the image.
 - Real-time preview of the resulting photo.
@@ -104,11 +104,12 @@ cp .env.example .env
 3. **Build and start the containers**
 Using the provided Makefile, you can launch the entire stack:
 ```bash
-make build
+make
 ```
 
-
 *This command spins up the Web server, Database, and Mailhog containers, and automatically runs the database setup script.*
+
+
 4. **Access the application**
 * **App:** [http://localhost:8080](http://localhost:8080)
 * **Mailhog (to view sent emails):** [http://localhost:8025](http://localhost:8025)
