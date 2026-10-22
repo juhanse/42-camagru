@@ -29,14 +29,14 @@
             style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; padding: 15px; background: white; border-radius: 8px; border: 1px solid var(--secondary);">
             <button id="captureBtn" disabled
                 style="padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: var(--primary); color: white; border: none; border-radius: 4px; cursor: not-allowed; opacity: 0.5; transition: all 0.2s;">
-                Prendre une photo
+                Prendre
             </button>
 
             <span style="font-weight: bold; color: var(--text);">OU</span>
 
             <label for="imageUpload"
                 style="padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; text-align: center; display: inline-block;">
-                Uploader une image
+                Uploader
             </label>
             <input type="file" id="imageUpload" accept="image/png, image/jpeg" style="display: none;">
 
@@ -242,9 +242,20 @@
             canvas.height = video.videoHeight;
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         } else {
-            canvas.width = uploadedImage.naturalWidth;
-            canvas.height = uploadedImage.naturalHeight;
-            ctx.drawImage(uploadedImage, 0, 0, canvas.width, canvas.height);
+            const maxWidth = 1280;
+            const maxHeight = 1280;
+            let width = uploadedImage.naturalWidth;
+            let height = uploadedImage.naturalHeight;
+
+            if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height);
+                width = width * ratio;
+                height = height * ratio;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(uploadedImage, 0, 0, width, height);
         }
 
         const dataURL = canvas.toDataURL('image/png');
@@ -267,15 +278,11 @@
                 try {
                     data = JSON.parse(body);
                 } catch (error) {
-                    throw new Error(
-                        `Réponse PHP invalide (HTTP ${response.status})`
-                    );
+                    throw new Error(`Réponse PHP invalide (HTTP ${response.status}) : ${body}`);
                 }
 
                 if (!response.ok) {
-                    throw new Error(
-                        `Erreur HTTP ${response.status}`
-                    );
+                    throw new Error(`Erreur HTTP ${response.status} : ${body}`);
                 }
 
                 statusMessage.style.display = 'block';
@@ -295,6 +302,8 @@
                 }
             })
             .catch(error => {
+                console.error('Erreur lors de la sauvegarde :', error);
+
                 statusMessage.style.display = 'block';
                 statusMessage.style.backgroundColor = '#f8d7da';
                 statusMessage.style.color = '#721c24';

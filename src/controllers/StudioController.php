@@ -41,6 +41,8 @@ class StudioController extends Controller
 
     private function sendJsonError($message)
     {
+        if (ob_get_level())
+            ob_end_clean();
         header('Content-Type: application/json');
         echo json_encode(['error' => $message]);
         exit;
@@ -48,6 +50,7 @@ class StudioController extends Controller
 
     public function save()
     {
+        ob_start();
         $data = json_decode(file_get_contents('php://input'), true);
 
         if (!isset($data['csrf_token']) || $data['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -66,7 +69,7 @@ class StudioController extends Controller
             $this->sendJsonError('Format d\'image invalide');
         }
 
-        $sourceImg = imagecreatefromstring(base64_decode($imageParts[1]));
+        $sourceImg = @imagecreatefromstring(base64_decode($imageParts[1]));
         if (!$sourceImg) {
             $this->sendJsonError('Impossible de traiter l\'image source');
         }
@@ -102,7 +105,7 @@ class StudioController extends Controller
 
         $filterPath = __DIR__ . '/..' . parse_url($filterUrl, PHP_URL_PATH);
         if (file_exists($filterPath)) {
-            $filterImg = imagecreatefrompng($filterPath);
+            $filterImg = @imagecreatefrompng($filterPath);
             if ($filterImg) {
                 imagecopyresampled($finalImg, $filterImg, 0, 0, 0, 0, $targetW, $targetH, imagesx($filterImg), imagesy($filterImg));
             }
@@ -121,7 +124,7 @@ class StudioController extends Controller
             $this->sendJsonError('Le dossier uploads est indisponible');
         }
 
-        if (!imagepng($finalImg, $uploadPath) || !file_exists($uploadPath) || filesize($uploadPath) === 0) {
+        if (!@imagepng($finalImg, $uploadPath) || !file_exists($uploadPath) || filesize($uploadPath) === 0) {
             $this->sendJsonError('Échec de création du fichier PNG');
         }
 
@@ -129,6 +132,8 @@ class StudioController extends Controller
         $imageId = $imageModel->create($_SESSION['user_id'], $publicPath);
 
         if ($imageId) {
+            if (ob_get_level())
+                ob_end_clean();
             header('Content-Type: application/json');
             echo json_encode(['success' => true, 'image_url' => $publicPath]);
             exit;
