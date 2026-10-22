@@ -116,6 +116,7 @@ make
 
 
 5. **Useful Commands**
-* `make start`: Start the existing containers.
-* `make clean`: Stop the containers and wipe the database volumes.
-* `make re`: Rebuild the whole environment from scratch.
+* `make start`: Start the existing containers
+* `make clean`: Stop the containers and wipe the database volumes
+* `make re`: Rebuild the whole environment from scratch
+* `docker exec -it camagru-db mariadb -u root -p`: Enter the database
