@@ -1,51 +1,70 @@
-<div id="imageModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
-    <span id="closeModal" style="position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
-    <img id="modalImage" src="" style="max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+<div id="imageModal"
+    style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; padding: 20px;">
+    <span id="closeModal"
+        style="position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+    <img id="modalImage" src=""
+        style="max-width: 100%; max-height: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
 </div>
 
 <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
     <div style="flex: 2; min-width: 300px; display: flex; flex-direction: column; gap: 15px;">
         <h2>Studio de Montage</h2>
 
-        <div style="position: relative; width: 100%; background-color: #000; border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; display: flex; justify-content: center; align-items: center;">
-            <video id="videoElement" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
-            <img id="uploadedImage" style="width: 100%; height: 100%; object-fit: contain; display: none;" alt="Upload utilisateur">
-            <img id="overlayFilter" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; display: none;" alt="Filtre superposé">
-            <button id="activateCameraBtn" style="position: absolute; z-index: 10; padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">
+        <div
+            style="position: relative; width: 100%; background-color: #000; border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; display: flex; justify-content: center; align-items: center;">
+            <video id="videoElement" autoplay playsinline
+                style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+            <img id="uploadedImage" style="width: 100%; height: 100%; object-fit: contain; display: none;"
+                alt="Upload utilisateur">
+            <img id="overlayFilter"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; display: none;"
+                alt="Filtre superposé">
+            <button id="activateCameraBtn"
+                style="position: absolute; z-index: 10; padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">
                 Activez la caméra
             </button>
         </div>
 
-        <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; padding: 15px; background: white; border-radius: 8px; border: 1px solid var(--secondary);">
-            <button id="captureBtn" disabled style="padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: var(--primary); color: white; border: none; border-radius: 4px; cursor: not-allowed; opacity: 0.5; transition: all 0.2s;">
+        <div
+            style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; padding: 15px; background: white; border-radius: 8px; border: 1px solid var(--secondary);">
+            <button id="captureBtn" disabled
+                style="padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: var(--primary); color: white; border: none; border-radius: 4px; cursor: not-allowed; opacity: 0.5; transition: all 0.2s;">
                 Prendre une photo
             </button>
 
             <span style="font-weight: bold; color: var(--text);">OU</span>
 
-            <label for="imageUpload" style="padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; text-align: center; display: inline-block;">
+            <label for="imageUpload"
+                style="padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; text-align: center; display: inline-block;">
                 Uploader une image
             </label>
             <input type="file" id="imageUpload" accept="image/png, image/jpeg" style="display: none;">
 
-            <button id="clearUploadBtn" style="display: none; padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">
+            <button id="clearUploadBtn"
+                style="display: none; padding: 12px 24px; font-size: 1em; font-weight: bold; background-color: var(--accent); color: white; border: none; border-radius: 4px; cursor: pointer;">
                 Annuler
             </button>
         </div>
 
         <div id="statusMessage" style="padding: 10px; border-radius: 4px; display: none;"></div>
 
-        <div style="margin-top: 20px; background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--secondary);">
+        <div
+            style="margin-top: 20px; background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--secondary);">
             <h3>Mes créations</h3>
             <div style="display: flex; overflow-x: auto; gap: 15px; padding-top: 15px; padding-bottom: 10px;">
                 <?php if (!empty($userImages)): ?>
                     <?php foreach ($userImages as $img): ?>
                         <div style="position: relative; min-width: 120px; width: 120px; flex-shrink: 0;">
-                            <img src="<?= htmlspecialchars($img['file_path']) ?>" class="creation-thumbnail" style="width: 100%; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; cursor: zoom-in;" alt="Miniature">
-                            <form action="/studio/delete" method="POST" style="position: absolute; top: -5px; right: -5px; margin: 0; z-index: 10;">
+                            <img src="<?= htmlspecialchars($img['file_path']) ?>" class="creation-thumbnail"
+                                style="width: 100%; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; cursor: zoom-in;"
+                                alt="Miniature">
+                            <form action="/studio/delete" method="POST"
+                                style="position: absolute; top: -5px; right: -5px; margin: 0; z-index: 10;">
                                 <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                                 <input type="hidden" name="image_id" value="<?= $img['id'] ?>">
-                                <button type="submit" style="background-color: var(--accent); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold;" title="Supprimer">×</button>
+                                <button type="submit"
+                                    style="background-color: var(--accent); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold;"
+                                    title="Supprimer">×</button>
                             </form>
                         </div>
                     <?php endforeach; ?>
@@ -56,16 +75,21 @@
         </div>
     </div>
 
-    <div style="flex: 1; min-width: 250px; background: white; border: 1px solid var(--secondary); border-radius: 8px; padding: 15px; display: flex; flex-direction: column;">
+    <div
+        style="flex: 1; min-width: 250px; background: white; border: 1px solid var(--secondary); border-radius: 8px; padding: 15px; display: flex; flex-direction: column;">
         <h3>Calques</h3>
-        <p style="font-size: 0.9em; color: gray; margin-bottom: 15px;">Sélectionnez un calque pour activer la capture.</p>
+        <p style="font-size: 0.9em; color: gray; margin-bottom: 15px;">Sélectionnez un calque pour activer la capture.
+        </p>
 
         <div style="flex: 1; position: relative; min-height: 200px;">
-            <div id="filtersContainer" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px;">
+            <div id="filtersContainer"
+                style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 5px;">
                 <?php if (!empty($filters)): ?>
                     <?php foreach ($filters as $filter): ?>
-                        <div class="filter-option" data-src="<?= htmlspecialchars($filter) ?>" style="border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: 0.2s; background-color: #f1f1f1; padding: 5px; text-align: center;">
-                            <img src="<?= htmlspecialchars($filter) ?>" style="max-width: 100%; max-height: 100px; object-fit: contain;" alt="Filtre">
+                        <div class="filter-option" data-src="<?= htmlspecialchars($filter) ?>"
+                            style="border: 2px solid transparent; border-radius: 4px; cursor: pointer; transition: 0.2s; background-color: #f1f1f1; padding: 5px; text-align: center;">
+                            <img src="<?= htmlspecialchars($filter) ?>"
+                                style="max-width: 100%; max-height: 100px; object-fit: contain;" alt="Filtre">
                             <p style="font-size: 0.8em; margin-top: 5px; word-break: break-all;">
                                 <?= htmlspecialchars(basename($filter)) ?>
                             </p>
@@ -236,48 +260,48 @@
                 csrf_token: csrfToken
             })
         })
-        .then(async response => {
-            const body = await response.text();
-            let data;
+            .then(async response => {
+                const body = await response.text();
+                let data;
 
-            try {
-                data = JSON.parse(body);
-            } catch (error) {
-                throw new Error(
-                    `Réponse PHP invalide (HTTP ${response.status})`
-                );
-            }
+                try {
+                    data = JSON.parse(body);
+                } catch (error) {
+                    throw new Error(
+                        `Réponse PHP invalide (HTTP ${response.status})`
+                    );
+                }
 
-            if (!response.ok) {
-                throw new Error(
-                    `Erreur HTTP ${response.status}`
-                );
-            }
+                if (!response.ok) {
+                    throw new Error(
+                        `Erreur HTTP ${response.status}`
+                    );
+                }
 
-            statusMessage.style.display = 'block';
+                statusMessage.style.display = 'block';
 
-            if (data.success) {
-                statusMessage.style.backgroundColor = '#d4edda';
-                statusMessage.style.color = '#155724';
-                statusMessage.innerText = 'Image sauvegardée avec succès !';
+                if (data.success) {
+                    statusMessage.style.backgroundColor = '#d4edda';
+                    statusMessage.style.color = '#155724';
+                    statusMessage.innerText = 'Image sauvegardée avec succès !';
 
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    statusMessage.style.backgroundColor = '#f8d7da';
+                    statusMessage.style.color = '#721c24';
+                    statusMessage.innerText = data.error || 'Erreur de sauvegarde.';
+
+                    updateCaptureButtonState();
+                }
+            })
+            .catch(error => {
+                statusMessage.style.display = 'block';
                 statusMessage.style.backgroundColor = '#f8d7da';
                 statusMessage.style.color = '#721c24';
-                statusMessage.innerText = data.error || 'Erreur de sauvegarde.';
+                statusMessage.innerText = error.message;
 
                 updateCaptureButtonState();
-            }
-        })
-        .catch(error => {
-            statusMessage.style.display = 'block';
-            statusMessage.style.backgroundColor = '#f8d7da';
-            statusMessage.style.color = '#721c24';
-            statusMessage.innerText = error.message;
-
-            updateCaptureButtonState();
-        });
+            });
     });
 
     creationThumbnails.forEach(thumb => {

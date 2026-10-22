@@ -75,10 +75,11 @@ class StudioController extends Controller
         $targetH = 480;
         $finalImg = imagecreatetruecolor($targetW, $targetH);
 
-        imagealphablending($finalImg, true);
+        imagealphablending($finalImg, false);
         imagesavealpha($finalImg, true);
-        $bgColor = imagecolorallocatealpha($finalImg, 255, 255, 255, 127);
-        imagefill($finalImg, 0, 0, $bgColor);
+        $transparent = imagecolorallocatealpha($finalImg, 0, 0, 0, 127);
+        imagefill($finalImg, 0, 0, $transparent);
+        imagealphablending($finalImg, true);
 
         $srcW = imagesx($sourceImg);
         $srcH = imagesy($sourceImg);
@@ -108,11 +109,15 @@ class StudioController extends Controller
         }
 
         $uploadDir = __DIR__ . '/../public/uploads';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
         $fileName = uniqid('image_', true) . '.png';
         $uploadPath = $uploadDir . '/' . $fileName;
-        $publicPath = '/uploads/' . $fileName;
+        $publicPath = '/public/uploads/' . $fileName;
 
-        if (!is_dir($uploadDir) || !is_writable($uploadDir)) {
+        if (!is_writable($uploadDir)) {
             $this->sendJsonError('Le dossier uploads est indisponible');
         }
 
