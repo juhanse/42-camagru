@@ -16,7 +16,7 @@
 
 ## 🎯 What is Camagru?
 
-**Camagru** is a full-stack web development project from the **42 School** curriculum. The goal is to build a complete social-media web application where users can take pictures, apply filters (stickers), and interact with others' posts.
+**Camagru** is a full-stack web development project from **42 School**. The goal is to build a complete social-media web application where users can take pictures, apply filters (stickers), and interact with others' posts.
 
 The major constraint of this project is that **no frameworks or libraries are allowed** (no Laravel, React, or ORM). Everything, from the MVC architecture to the database routing and security, must be built from scratch. 
 
@@ -47,7 +47,7 @@ Here is a quick overview of what the application can do:
 - Update username, email address, and password.
 - Notification preferences.
 
-**🛡️ Moderation (Admin):**
+**🛡️ Moderation:**
 - Users can report inappropriate content.
 - Admin panel to manage reported images.
 
