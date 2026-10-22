@@ -2,6 +2,7 @@ services:
   web:
     build: .
     container_name: camagru-web
+    command: sh -c "mkdir -p public/uploads && chown -R www-data:www-data public/uploads && apache2-foreground"
     ports:
       - "8080:80"
     volumes:
